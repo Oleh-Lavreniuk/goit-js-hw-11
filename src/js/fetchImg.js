@@ -7,12 +7,9 @@ const FILTER_RESPONSE =
   'image_type=photo&orientation=horizontal&safesearch=true';
 
 const fetchImages = async (query, page, perPage) => {
-  try {
-    const response = await axios.get(
-      `?key=${API_KEY}&q=${query}&page=${page}&per_page=${perPage}&${FILTER_RESPONSE}`
-    );
-    return response;
-  } catch (error) {
-    console.log(error.message);
-  }
+  const response = await axios.get(
+    `?key=${API_KEY}&q=${query}&page=${page}&per_page=${perPage}&${FILTER_RESPONSE}`
+  ).data;
+
+  return response;
 };
