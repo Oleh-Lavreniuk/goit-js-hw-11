@@ -2,7 +2,7 @@ export { renderGallery };
 
 const gallery = document.querySelector('.gallery');
 
-const renderGallery = () => {
+const renderGallery = images => {
   const markup = images
     .map(image => {
       const {
