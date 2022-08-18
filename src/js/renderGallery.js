@@ -21,10 +21,10 @@ const renderGallery = images => {
           <div class="photo-card" id="${id}">
             <img class="gallery-item__img" src="${webformatURL}" alt="${tags}" loading="lazy" />
             <div class="info">
-              <p class="info-item"><b>Likes</b>${likes}</p>
-              <p class="info-item"><b>Views</b>${views}</p>
-              <p class="info-item"><b>Comments</b>${comments}</p>
-              <p class="info-item"><b>Downloads</b>${downloads}</p>
+              <p class="info-item"><b>Likes</b>${likes.toLocaleString()}</p>
+              <p class="info-item"><b>Views</b>${views.toLocaleString()}</p>
+              <p class="info-item"><b>Comments</b>${comments.toLocaleString()}</p>
+              <p class="info-item"><b>Downloads</b>${downloads.toLocaleString()}</p>
             </div>
           </div>
         </a>

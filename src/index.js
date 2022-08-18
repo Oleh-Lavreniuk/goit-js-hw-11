@@ -46,7 +46,7 @@ async function onFormSubmitClick(ev) {
     const imagesList = await renderGallery(imgArr.data.hits);
     console.log('imagesList:', imagesList);
     simpleLightBox = new SimpleLightbox('.gallery a').refresh();
-    return Notify.success('Hooray! We found totalHits images.');
+    Notify.success('Hooray! We found totalHits images.');
 
     if (imgArr.data.totalHits > perPage) {
       refs.loadMoreBtn.classList.remove('is-hidden');
@@ -56,4 +56,23 @@ async function onFormSubmitClick(ev) {
   }
 }
 
-function onloadMoreBtnClick() {}
+function onloadMoreBtnClick() {
+  page += 1;
+  simpleLightBox.destroy();
+
+  try {
+    const imgArr = await fetchImages(query, page, perPage);
+    const imagesList = await renderGallery(imgArr.data.hits);
+    console.log('imagesList:', imagesList);
+    simpleLightBox = new SimpleLightbox('.gallery a').refresh();
+
+    const totalPages = Math.ceil(imgArr.data.totalHits / perPage);
+
+    if (page === totalPages) {
+        refs.loadMoreBtn.classList.add('is-hidden')
+      return Notify.failure("We're sorry, but you've reached the end of search results.");
+      }
+  } catch (error) {
+    console.log('error:', error);
+  }
+}
