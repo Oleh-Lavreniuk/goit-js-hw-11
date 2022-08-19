@@ -1,8 +1,7 @@
-import './css/styles.css';
 import { fetchImages } from './js/fetchImg';
 import { renderGallery } from './js/renderGallery';
+import { imgIsFind, imgNotFind, reachEndOfResults } from './js/notify';
 
-import { Notify } from 'notiflix/build/notiflix-notify-aio';
 import SimpleLightbox from 'simplelightbox';
 import 'simplelightbox/dist/simple-lightbox.min.css';
 
@@ -11,6 +10,8 @@ const refs = {
   gallery: document.querySelector('.gallery'),
   loadMoreBtn: document.querySelector('.load-more'),
 };
+
+loadMoreBtnHidden();
 
 let query = '';
 let page = 1;
@@ -25,12 +26,10 @@ async function onFormSubmitClick(ev) {
   page = 1;
   query = ev.currentTarget.searchQuery.value.trim();
   refs.gallery.innerHTML = '';
-  refs.loadMoreBtn.classList.add('is-hidden');
+  loadMoreBtnHidden();
 
   if (query === '') {
-    return Notify.failure(
-      'Sorry, there are no images matching your search query. Please try again.'
-    );
+    return imgNotFind();
   }
 
   try {
@@ -38,25 +37,24 @@ async function onFormSubmitClick(ev) {
     console.log('imgArr:', imgArr);
 
     if (imgArr.data.totalHits === 0) {
-      return Notify.failure(
-        'Sorry, there are no images matching your search query. Please try again.'
-      );
+      loadMoreBtnHidden();
+      return imgNotFind();
     }
 
     const imagesList = await renderGallery(imgArr.data.hits);
     console.log('imagesList:', imagesList);
     simpleLightBox = new SimpleLightbox('.gallery a').refresh();
-    Notify.success('Hooray! We found totalHits images.');
+    imgIsFind();
 
     if (imgArr.data.totalHits > perPage) {
-      refs.loadMoreBtn.classList.remove('is-hidden');
+      loadMoreBtnShow();
     }
   } catch (error) {
     console.log('error:', error);
   }
 }
 
-function onloadMoreBtnClick() {
+async function onloadMoreBtnClick() {
   page += 1;
   simpleLightBox.destroy();
 
@@ -69,10 +67,18 @@ function onloadMoreBtnClick() {
     const totalPages = Math.ceil(imgArr.data.totalHits / perPage);
 
     if (page === totalPages) {
-        refs.loadMoreBtn.classList.add('is-hidden')
-      return Notify.failure("We're sorry, but you've reached the end of search results.");
-      }
+      loadMoreBtnHidden();
+      return reachEndOfResults();
+    }
   } catch (error) {
     console.log('error:', error);
   }
+}
+
+function loadMoreBtnShow() {
+  refs.loadMoreBtn.classList.remove('is-hidden');
+}
+
+function loadMoreBtnHidden() {
+  refs.loadMoreBtn.classList.add('is-hidden');
 }

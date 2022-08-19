@@ -11,6 +11,5 @@ async function fetchImages(query, page, perPage) {
     `?key=${API_KEY}&q=${query}&page=${page}&per_page=${perPage}&${FILTER_RESPONSE}`
   );
 
-  console.log('fetchImages ~ response', response);
   return response;
 }
