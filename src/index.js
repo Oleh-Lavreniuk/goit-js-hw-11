@@ -60,8 +60,7 @@ async function onloadMoreBtnClick() {
 
   try {
     const imgArr = await fetchImages(query, page, perPage);
-    const imagesList = await renderGallery(imgArr.data.hits);
-    console.log('imagesList:', imagesList);
+    await renderGallery(imgArr.data.hits);
     simpleLightBox = new SimpleLightbox('.gallery a').refresh();
 
     const totalPages = Math.ceil(imgArr.data.totalHits / perPage);
@@ -71,7 +70,7 @@ async function onloadMoreBtnClick() {
       return reachEndOfResults();
     }
   } catch (error) {
-    console.log('error:', error);
+    console.log(`%c Error: ${error}`, 'color: red; font-weight: 700');
   }
 }
 
